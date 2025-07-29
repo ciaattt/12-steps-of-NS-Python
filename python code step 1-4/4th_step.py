@@ -116,7 +116,7 @@ ax.legend()
 def animate(n):
     line_num.set_ydata(U[n])
     line_ana.set_ydata(U_analytic[n])
-    ax.set_title(f'Burger Equation\n {}')
+    ax.set_title(f'Burger Equation')
     return line_num, line_ana
 
 ani = animation.FuncAnimation(fig, animate, frames=len(t_array), interval=30, blit=True)
