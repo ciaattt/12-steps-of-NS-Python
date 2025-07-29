@@ -69,7 +69,7 @@ def Numerical_Burger(u_to,nu_value,t_lim,dt,dx):
             u_new[j] = (u_to[j] - u_to[j]*(dt/dx)*(u_to[j]-u_to[j-1]) 
                         + nu_value*(dt/dx**2)*((u_to[j+1]-2*u_to[j]) + u_to[j-1]))
 
-
+        #set the boundary condition for u at x = 0
         u_new[0] = (u_to[0] - u_to[0]*(dt/dx)*(u_to[0]-u_to[-2]) 
                     + nu_value*(dt/dx**2)*((u_to[1]-2*u_to[0]) + u_to[-2]))
         
