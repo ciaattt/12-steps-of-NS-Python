@@ -9,7 +9,7 @@ a,b = 0,2   #set the lower and upper bound respectively on x axis
 dx = (b-a)/(len(u) - 1)   #set the dx discretisation
 u[int(0.5/dx):int(1/dx)] = 2    #set the initial condition, t = 0, u = 2 within x = 0.5 and x = 1
 x = [i*dx for i in range(0,len(u))]
-v = 0.1   #set the viscosity value, notice the CFL stability prerequisite!
+v = 0.1   #set the diffusion value, notice the CFL stability prerequisite!
 t = 0.625   #set the t limit
 dt = 0.001  #set the timestep
 

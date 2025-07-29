@@ -9,15 +9,15 @@ from sympy.utilities.lambdify import lambdify
 init_printing(use_latex=True)
 
 element_num = 101 #set the element number in x axis, divide 100 equal length 
-a,b = 0,2*np.pi #set the lower and upper bound
+a,b = 0,2*np.pi #set the lower and upper bound, upper bound is 2pi
 dx = (b-a)/(element_num-1)
 sigma = 0.1 #we use the stability for the first time regarding to CFL condition sigma should be less than 0.5
 to = 0 #set the t init
 t_lim = 0.5 #set the t limit
-nu_value = 0.07 #set the kinematic viscosity of fluid
+nu_value = 0.07 #set the diffusion of fluid
 dt = sigma * dx**2 / nu_value  #classical stable time step for diffusion
-x_vals = np.linspace(a,b,element_num) #set the discretization of x axis
-t_array = np.arange(to, t_lim + dt, dt) # Array waktu diskrit
+x_vals = np.linspace(a,b,element_num) #set the discretization of x axis, using linspace to evenly distanced every point (101)
+t_array = np.arange(to, t_lim + dt, dt) #set the time discrite using arange with delta t dt
 
 #constuct all the analytical expression based on Prof. Barba's Module 
 def Analytical_Burger(x_vals,nu_value,t_lim,to):
@@ -36,14 +36,14 @@ def Analytical_Burger(x_vals,nu_value,t_lim,to):
     u_vals_to = np.asarray([u_function(xi,nu_value,to) for xi in x_vals])    #calculate the t0
     u_vals_tlim = np.asarray([u_function(xi,nu_value,t_lim) for xi in x_vals])      #calculate the tlim
   
-    U_analytic = []
+    U_analytic = [] #array to store the U analytic result based on for loop below
     
     for t_val in t_array:
 
         u_vals = np.array([u_function(xi, nu_value, t_val) for xi in x_vals])
         U_analytic.append(u_vals)
 
-    return u_vals_to,u_vals_tlim, U_analytic
+    return u_vals_to,u_vals_tlim, U_analytic #return u(to), u(tlim), u and every time
 
 #u = Analytical_Burger(x,nu,t,to)
 u_to = Analytical_Burger(x_vals,nu_value,t_lim,to)[0]
@@ -55,19 +55,18 @@ def Numerical_Burger(u_to,nu_value,t_lim,dt,dx):
 
     for i in range (0,int(t_lim/dt)):       #calculate each timestep
 
-        u_new = u_to.copy()
+        u_new = u_to.copy() 
 
         for j in range(1, len(u_to) - 1):
             
-            u_new[j] = (u_to[j] 
-                        - u_to[j]*(dt/dx)*(u_to[j]-u_to[j-1]) 
+            u_new[j] = (u_to[j] - u_to[j]*(dt/dx)*(u_to[j]-u_to[j-1]) 
                         + nu_value*(dt/dx**2)*((u_to[j+1]-2*u_to[j]) + u_to[j-1]))
 
 
-        u_new[0] = (u_to[0] 
-                    - u_to[0]*(dt/dx)*(u_to[0]-u_to[-2]) 
+        u_new[0] = (u_to[0] - u_to[0]*(dt/dx)*(u_to[0]-u_to[-2]) 
                     + nu_value*(dt/dx**2)*((u_to[1]-2*u_to[0]) + u_to[-2]))
-        u_new[-1] = u_new[0]
+        
+        u_new[-1] = u_new[0]    #set the boundary condition (u(2*pi) = u(0))
         u_to = u_new
         U.append(u_new)
 
@@ -117,7 +116,7 @@ ax.legend()
 def animate(n):
     line_num.set_ydata(U[n])
     line_ana.set_ydata(U_analytic[n])
-    ax.set_title(f'Burger Equation')
+    ax.set_title(f'Burger Equation\n {}')
     return line_num, line_ana
 
 ani = animation.FuncAnimation(fig, animate, frames=len(t_array), interval=30, blit=True)
