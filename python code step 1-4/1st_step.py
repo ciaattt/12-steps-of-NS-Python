@@ -30,7 +30,7 @@ for i in range (0,int(t/dt)):       #calculate each timestep
 
 #Program to visualization
 fig, ax = plt.subplots()
-line, = ax.plot(x, U[0], 'r', linewidth=1)
+line, = ax.plot(x, U[0], 'b', linewidth=1)
 ax.set_xlim(min(x), 2.1)
 ax.set_ylim(0, 3)
 ax.set_xlabel('$x$')

@@ -16,7 +16,8 @@ to = 0 #set the t init
 t_lim = 0.5 #set the t limit
 nu_value = 0.07 #set the kinematic viscosity of fluid
 dt = sigma * dx**2 / nu_value  #classical stable time step for diffusion
-x_vals = np.linspace(a,b,element_num) #
+x_vals = np.linspace(a,b,element_num) #set the discretization of x axis
+t_array = np.arange(to, t_lim + dt, dt) # Array waktu diskrit
 
 #constuct all the analytical expression based on Prof. Barba's Module 
 def Analytical_Burger(x_vals,nu_value,t_lim,to):
@@ -35,7 +36,14 @@ def Analytical_Burger(x_vals,nu_value,t_lim,to):
     u_vals_to = np.asarray([u_function(xi,nu_value,to) for xi in x_vals])    #calculate the t0
     u_vals_tlim = np.asarray([u_function(xi,nu_value,t_lim) for xi in x_vals])      #calculate the tlim
   
-    return u_vals_to,u_vals_tlim
+    U_analytic = []
+    
+    for t_val in t_array:
+
+        u_vals = np.array([u_function(xi, nu_value, t_val) for xi in x_vals])
+        U_analytic.append(u_vals)
+
+    return u_vals_to,u_vals_tlim, U_analytic
 
 #u = Analytical_Burger(x,nu,t,to)
 u_to = Analytical_Burger(x_vals,nu_value,t_lim,to)[0]
@@ -92,17 +100,25 @@ def Numerical_Burger(u_to,nu_value,t_lim,dt,dx):
 
 #function callback
 U = Numerical_Burger(u_to,nu_value,t_lim,dt,dx)
+U_analytic = Analytical_Burger(x_vals,nu_value,t_lim,to)[2]
 
 #Program to visualization
-fig, ax = plt.subplots()
-line, = ax.plot(x_vals, U[0], 'r', linewidth=1)
+fig, ax = plt.subplots(figsize=(10, 6))
+line_num, = ax.plot(x_vals, U[0], 'b-', lw=2, label='Numerical')
+line_ana, = ax.plot(x_vals, U_analytic[0], 'k--', lw=2, label='Analytical')
+#ax.set_xlim([a, b])
+#ax.set_ylim([0, 6])
 ax.set_xlabel('$x$')
-ax.set_ylabel('$u$')
-ax.set_title('1D Burger Equation')
+ax.set_ylabel('$u(x,t)$')
+ax.set_title('Comparison: Analytical vs Numerical Solution of 1D Burger Equation')
+ax.legend()
+#ax.grid(True)
 
 def animate(n):
-    line.set_ydata(U[n])
-    return line,
+    line_num.set_ydata(U[n])
+    line_ana.set_ydata(U_analytic[n])
+    ax.set_title(f'Burger Equation')
+    return line_num, line_ana
 
-ani = animation.FuncAnimation(fig, animate, frames=len(U), interval=30)
+ani = animation.FuncAnimation(fig, animate, frames=len(t_array), interval=30, blit=True)
 plt.show()
