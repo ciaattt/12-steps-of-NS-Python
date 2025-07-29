@@ -69,6 +69,7 @@ def Convection_2D(u_to,dx,dt,C):
 #call the U
 U_xyt = Convection_2D(u_to,dx,dt,C)
 
+#Visualize
 fig, ax = plt.subplots(figsize=(8,7))
 
 # Inisialisasi heatmap awal
