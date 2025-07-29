@@ -8,6 +8,8 @@ from sympy import init_printing
 from sympy.utilities.lambdify import lambdify
 init_printing(use_latex=True)
 
+
+#input the parameter
 element_num = 101 #set the element number in x axis, divide 100 equal length 
 a,b = 0,2*np.pi #set the lower and upper bound, upper bound is 2pi
 dx = (b-a)/(element_num-1)
@@ -18,6 +20,8 @@ nu_value = 0.07 #set the diffusion of fluid
 dt = sigma * dx**2 / nu_value  #classical stable time step for diffusion
 x_vals = np.linspace(a,b,element_num) #set the discretization of x axis, using linspace to evenly distanced every point (101)
 t_array = np.arange(to, t_lim + dt, dt) #set the time discrite using arange with delta t dt
+
+
 
 #constuct all the analytical expression based on Prof. Barba's Module 
 def Analytical_Burger(x_vals,nu_value,t_lim,to):
@@ -49,6 +53,9 @@ def Analytical_Burger(x_vals,nu_value,t_lim,to):
 u_to = Analytical_Burger(x_vals,nu_value,t_lim,to)[0]
 u_tlim = Analytical_Burger(x_vals,nu_value,t_lim,to)[1]
 
+
+
+#construct the numerical framework of burger equation
 def Numerical_Burger(u_to,nu_value,t_lim,dt,dx):
 
     U = []  #tensor to save all the u data spaciotemporal
