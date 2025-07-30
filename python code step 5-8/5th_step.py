@@ -43,7 +43,7 @@ plt.tight_layout()
 plt.show()
 
 #construct the numerical framework of 2d convection equation
-def Convection_2D(u_to,dx,dt,C):
+def Convection_2D(u_to,dx,dy,dt,C):
 
     U = []  #tensor to save all the u data spaciotemporal
 
@@ -57,8 +57,14 @@ def Convection_2D(u_to,dx,dt,C):
             for j in range (0,len(u_to[0])): #define the x each iteration
                 #numeric convection procedure
                 u_new[i,j] = (u_to[i,j] 
-                              - C*(dt/dx)*(u_to[i,j] - u_to[i-1,j]) 
+                              - C*(dt/dy)*(u_to[i,j] - u_to[i-1,j]) 
                               - C*(dt/dx)*(u_to[i,j] - u_to[i,j-1]))
+        
+        #set the boundary condition
+        u_new[0] = 1        #at x = 0 u = 1
+        u_new[-1] = 1       #at x = 2 u = 1
+        u_new[:,0] = 1      #at y = 0 u = 1
+        u_new[:,-1] = 1     #at y = 2 u = 1 
 
         #input the u after each timestep and refresh to next timestep
         U.append(u_new)    
@@ -67,7 +73,7 @@ def Convection_2D(u_to,dx,dt,C):
     return U
 
 #call the U
-U_xyt = Convection_2D(u_to,dx,dt,C)
+U_xyt = Convection_2D(u_to,dx,dy,dt,C)
 
 #Visualize
 fig, ax = plt.subplots(figsize=(8,7))
