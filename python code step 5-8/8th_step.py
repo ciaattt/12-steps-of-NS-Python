@@ -48,7 +48,7 @@ plt.tight_layout()
 plt.show()
 
 #construct the numerical framework of 2d convection equation
-def Convection_2D(u_to,v_to,dx,dy,dt,nu):
+def Burger_2D(u_to,v_to,dx,dy,dt,nu):
 
     U = []  #tensor to save all the u data spaciotemporal
     V = []  #tensor to save all the v data spaciotemporal
@@ -96,8 +96,8 @@ def Convection_2D(u_to,v_to,dx,dy,dt,nu):
     return U,V
 
 #call the U
-U_xyt = Convection_2D(u_to,v_to,dx,dy,dt,nu)[0]
-V_xyt = Convection_2D(u_to,v_to,dx,dy,dt,nu)[1]
+U_xyt = Burger_2D(u_to,v_to,dx,dy,dt,nu)[0]
+V_xyt = Burger_2D(u_to,v_to,dx,dy,dt,nu)[1]
 
 #Visualize U
 fig, ax = plt.subplots(figsize=(8,7))
