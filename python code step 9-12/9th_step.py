@@ -17,6 +17,7 @@ a,b = 0,2 #set the x bound
 c,d = 0,1 #set the y bound
 dx = (b-a)/(element_num_x-1)  #set the dx length
 dy = (d-c)/((element_num_y-1))  #set the dy length
+convergence_res = 0.000001 #smaller means the source term diffuse better
 
 #mesh to visualize and numerically matter
 x_vals = np.linspace(a,b,element_num_x) #set the x axis
@@ -64,12 +65,12 @@ def Laplace_Analytically(X,Y):
 
 res_1,res_2 = Laplace_Analytically(X,Y)
 
-def Laplace_Numerically(y_vals,dx,dy,p,l1norm_target):
+def Laplace_Numerically(y_vals,dx,dy,p,convergence_res):
 
     #set the similiar p for calculation framework
     l1norm = 1
 
-    while l1norm > l1norm_target:
+    while l1norm > convergence_res:
 
         p_new = p.copy()
         #we calculate the horizontal first then vertically declined after the horizontal is done
@@ -91,14 +92,15 @@ def Laplace_Numerically(y_vals,dx,dy,p,l1norm_target):
         p_new[-1, :] = p_new[-2, :] #set the neumann boundary
 
         #calculate the error and pass to next calculation to reduce error
-        l1norm = (np.sum(np.abs(p_new[:]) - np.abs(p[:]))/np.sum(np.abs(p[:]))) 
+        l1norm = (np.sum(np.abs(p_new[:]) - np.abs(p[:]))/np.sum(np.abs(p[:])))
+        print(f'convergence residual: {l1norm}')
         p = p_new
 
     return p_new
 
 fig, ax = plt.subplots(figsize=(10,7))  #initialize the figure by subplots
 
-P_numeric = Laplace_Numerically(y_vals,dx,dy,p, 0.0001)
+P_numeric = Laplace_Numerically(y_vals,dx,dy,p,convergence_res)
 
 # Inisialisasi heatmap awal
 cax = ax.imshow(P_numeric, cmap='seismic', origin='lower', extent=[np.min(X), np.max(X), np.min(Y), np.max(Y)], vmin=np.min(P_numeric), vmax=np.max(P_numeric)) #extent to visualize 
